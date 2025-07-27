@@ -19,7 +19,7 @@ const getCity = async (city) => {
 const success = async (pos) => {
     const longitude = pos.coords.longitude;
     const latitude = pos.coords.latitude;
-    const base = 'http://dataservice.accuweather.com/locations/v1/cities/geoposition/search';
+    const base = 'https://dataservice.accuweather.com/locations/v1/cities/geoposition/search';
     const query = `?apikey=${key}&q=${latitude},${longitude}`;
     const response = await fetch(base + query)
     const data = await response.json();
