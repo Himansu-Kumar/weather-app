@@ -4,7 +4,6 @@ const details = document.querySelector('.details');
 const time = document.querySelector('.time');
 const icon = document.querySelector('.icon img');
 
-
 const updateUI = (data) => {
     const cityDetails = data.cityDetails;
     const weather = data.weather;
@@ -20,7 +19,6 @@ const updateUI = (data) => {
     if (card.classList.contains('d-none')) {
         card.classList.remove('d-none');
     }
-
     let timeSrc = null;
     if (weather.IsDayTime) {
         timeSrc = 'img/day.svg';
@@ -48,5 +46,14 @@ cityForm.addEventListener('submit', (e) => {
 
     updateCity(city)
         .then(data => { updateUI(data) })
-        .catch(err => {console.log(err)})
-})
+        .catch(err => { console.log(err) })
+});
+
+const userCity = async () => {
+    const cityDetails = await getUserLocation();
+    const weather = await getWeather(cityDetails.Key);
+    return { cityDetails, weather };
+}
+userCity()
+    .then(data => { updateUI(data) })
+    .catch(err => { console.error(err) });
