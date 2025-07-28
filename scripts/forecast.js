@@ -1,26 +1,18 @@
-const key = 'SsHByX4O2C2EW83RtMvhtcbGHtCwVa8N';
+const key = '97792accb9b9a769723d3cc79a9a3272';
 
-const getWeather = async (id) => {
-    const base = 'https://dataservice.accuweather.com/currentconditions/v1/';
-    const query = `${id}?apikey=${key}`;
+const getWeather = async (city) => {
+    const base = 'https://api.openweathermap.org/data/2.5/weather';
+    const query = `?q=${city}&appid=${key}&units=metric`;
     const response = await fetch(base + query);
     const data = await response.json();
-    return data[0];
-}
-
-const getCity = async (city) => {
-    const base = 'https://dataservice.accuweather.com/locations/v1/cities/search';
-    const query = `?apikey=${key}&q=${city}`;
-    const response = await fetch(base + query);
-    const data = await response.json();
-    return data[0];
+    return data;
 }
 
 const success = async (pos) => {
     const longitude = pos.coords.longitude;
     const latitude = pos.coords.latitude;
-    const base = 'https://dataservice.accuweather.com/locations/v1/cities/geoposition/search';
-    const query = `?apikey=${key}&q=${latitude},${longitude}`;
+    const base = 'https://api.openweathermap.org/data/2.5/weather';
+    const query = `?lat=${latitude}&lon=${longitude}&appid=${key}&units=metric`;
     const response = await fetch(base + query)
     const data = await response.json();
     return data;
@@ -31,11 +23,11 @@ const getUserLocation = () => {
         if (navigator.geolocation) {
             const data = navigator.geolocation.getCurrentPosition(
                 async (pos) => {
-                    const cityDetails = success(pos);
-                    resolve(cityDetails);;
+                    const userWeather = await success(pos);
+                    resolve(userWeather);
                 },
                 (err) => {
-                    reject('Location permission denied by user.')
+                    reject('Location permission denied by user.');
                 }
             );
         }

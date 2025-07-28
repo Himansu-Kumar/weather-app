@@ -1,6 +1,5 @@
 body{
     background: #eeedec;
-    /* font-size: 0.8em; */
 }
 .poppins-bold {
   font-family: "Poppins", sans-serif;
@@ -18,7 +17,7 @@ body{
   font-style: normal;
 }
 .container{
-    max-width: 400px;
+    max-width: 365px;
 }
 .icon{
     position: relative;

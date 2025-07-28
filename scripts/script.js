@@ -5,14 +5,11 @@ const time = document.querySelector('.time');
 const icon = document.querySelector('.icon img');
 
 const updateUI = (data) => {
-    const cityDetails = data.cityDetails;
-    const weather = data.weather;
-
     details.innerHTML = `
-        <h5 class="my-3">${cityDetails.EnglishName}</h5>
-        <div class="my-3">${weather.WeatherText}</div>
-        <div class="display-4 my-4">
-            <span>${weather.Temperature.Metric.Value}</span>
+        <h5 class="my-2">${data.name}</h5>
+        <div class="my-2">${data.weather[0].description}</div>
+        <div class="display-6 my-3">
+            <span>${data.main.temp}</span>
             <span>&deg;C</span>
         </div>
     `
@@ -20,7 +17,7 @@ const updateUI = (data) => {
         card.classList.remove('d-none');
     }
     let timeSrc = null;
-    if (weather.IsDayTime) {
+    if (data.weather[0].icon.includes('d')) {
         timeSrc = 'img/day.svg';
     }
     else {
@@ -28,14 +25,31 @@ const updateUI = (data) => {
     }
     time.setAttribute('src', timeSrc);
 
-    const iconSrc = `img/icons/${weather.WeatherIcon}.svg`;
+    let iconSrc = null;
+    if (data.weather[0].id>=200 && data.weather[0].id<=232) {
+        iconSrc = './img/icons/thunderstorm.svg';
+    }
+    else if (data.weather[0].id>=300 && data.weather[0].id<=321) {
+        iconSrc = './img/icons/drizzle.svg';
+    }
+    else if (data.weather[0].id>=500 && data.weather[0].id<=531) {
+        iconSrc = './img/icons/rain.svg';
+    }
+    else if (data.weather[0].id>=701 && data.weather[0].id<=781) {
+        iconSrc = './img/icons/atmosphere.svg';
+    }
+    else if (data.weather[0].id==800) {
+        iconSrc = './img/icons/clear.svg';
+    }
+    else if (data.weather[0].id>=801 && data.weather[0].id<=804) {
+        iconSrc = './img/icons/clouds.svg';
+    }
     icon.setAttribute('src', iconSrc);
 }
 
 const updateCity = async (city) => {
-    const cityDetails = await getCity(city);
-    const weather = await getWeather(cityDetails.Key);
-    return { cityDetails, weather };
+    const weather = await getWeather(city);
+    return weather;
 }
 
 cityForm.addEventListener('submit', (e) => {
@@ -49,11 +63,10 @@ cityForm.addEventListener('submit', (e) => {
         .catch(err => { console.log(err) })
 });
 
-const userCity = async () => {
-    const cityDetails = await getUserLocation();
-    const weather = await getWeather(cityDetails.Key);
-    return { cityDetails, weather };
-}
-userCity()
-    .then(data => { updateUI(data) })
-    .catch(err => { console.error(err) });
+const userCity = () => {
+    getUserLocation()
+        .then(data => updateUI(data))
+        .catch(err => console.log(err))
+};
+
+userCity();
